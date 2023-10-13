@@ -9,8 +9,8 @@
 
 <body>
   <div hx-ext="ws" ws-connect="ws:localhost:8081">
-    <div id="notifications"></div>
-    <div id="chat_room"></div>
+    <div id="notifications" hx-swap-oob="beforeend">New message received</div>
+    <div id="chat_room" hx-swap-oob="morphdom"></div>
     <form id="form" ws-send>
       <input name="chat_message" />
     </form>
@@ -18,6 +18,6 @@
 </body>
 
 <script src="htmx.min.js"></script>
-<script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+<script src="ws.js"></script>
 
 </html>
