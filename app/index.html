@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+  <script src="htmx.min.js"></script>
+  <script>
+    const socket = new WebSocket("ws://localhost:8081");
+    socket.addEventListener("open", (event) => {
+      console.log("Websocket connection opened", event);
+      socket.send("Hello Server!");
+    });
+    socket.addEventListener("message", (event) => {
+      console.log("Message from server", event.data);
+    });
+
+    socket.addEventListener("close", (event) => {
+      console.log("Websocket connection closed:", event);
+    });
+  </script>
+</body>
+
+</html>
