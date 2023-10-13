@@ -22,7 +22,8 @@ func main() {
 		if err != nil {
 			log.Fatal("read client data", err)
 		}
-		log.Printf("msg:%s", string(msg))
+		msgTxt := string(msg)
+		log.Print("Received Message:", msgTxt)
 		defer conn.Close()
 	})))
 
