@@ -17,14 +17,22 @@ func main() {
 		if err != nil {
 			log.Println("err ws", err)
 		}
+		go func() {
+			defer conn.Close()
 
-		msg, _, err := wsutil.ReadClientData(conn)
-		if err != nil {
-			log.Fatal("read client data", err)
-		}
-		msgTxt := string(msg)
-		log.Print("Received Message:", msgTxt)
-		defer conn.Close()
+			for {
+				msg, op, err := wsutil.ReadClientData(conn)
+				msgTxt := string(msg)
+				log.Print("Received Message:", msgTxt)
+				if err != nil {
+					log.Fatal("read client data", err)
+				}
+				err = wsutil.WriteServerMessage(conn, op, msg)
+				if err != nil {
+					log.Fatal("write server message", err)
+				}
+			}
+		}()
 	})))
 
 }
