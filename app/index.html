@@ -8,21 +8,16 @@
 </head>
 
 <body>
-  <script src="htmx.min.js"></script>
-  <script>
-    const socket = new WebSocket("ws://localhost:8081");
-    socket.addEventListener("open", (event) => {
-      console.log("Websocket connection opened", event);
-      socket.send("Hello Server!");
-    });
-    socket.addEventListener("message", (event) => {
-      console.log("Message from server", event.data);
-    });
-
-    socket.addEventListener("close", (event) => {
-      console.log("Websocket connection closed:", event);
-    });
-  </script>
+  <div hx-ext="ws" ws-connect="ws:localhost:8081">
+    <div id="notifications"></div>
+    <div id="chat_room"></div>
+    <form id="form" ws-send>
+      <input name="chat_message" />
+    </form>
+  </div>
 </body>
+
+<script src="htmx.min.js"></script>
+<script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
 
 </html>
