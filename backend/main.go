@@ -26,10 +26,12 @@ func main() {
 				log.Print("Received Message:", msgTxt)
 				if err != nil {
 					log.Fatal("read client data", err)
+					return
 				}
-				err = wsutil.WriteServerMessage(conn, op, msg)
+				err = wsutil.WriteServerMessage(conn, op, []byte(msgTxt))
 				if err != nil {
 					log.Fatal("write server message", err)
+					return
 				}
 			}
 		}()
