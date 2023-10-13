@@ -9,11 +9,10 @@
 
 <body>
   <div hx-ext="ws" ws-connect="ws:localhost:8081">
-    <div id="notifications" hx-swap-oob="beforeend">New message received</div>
-    <div id="chat_room" hx-swap-oob="morphdom"></div>
     <form id="form" ws-send>
-      <input name="chat_message" />
+      <input name="message" />
     </form>
+    <div id="notifications" hx-swap-oob="beforeend:#notifications"></div>
   </div>
 </body>
 
