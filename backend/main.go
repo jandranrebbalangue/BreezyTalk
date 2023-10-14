@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
@@ -19,10 +20,10 @@ func main() {
 			HXTarget      string `json:"HX-Target"`
 			HXCurrentUrl  string `json:"HX-Current-URL"`
 		} `json:"HEADERS"`
+		Time time.Time `json:"time"`
 	}
 	log.Fatal(http.ListenAndServe(":8081", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		conn, _, _, err := ws.UpgradeHTTP(r, w)
-		log.Print("Client connection network ", conn.LocalAddr().Network())
 		if err != nil {
 			log.Println("err ws", err)
 		}
@@ -30,14 +31,24 @@ func main() {
 			defer conn.Close()
 
 			for {
-				var response Response
+				response := Response{}
+				response.Time = time.Now()
+				updatedJsonData, _ := json.Marshal(response)
+				var updatedResponse Response
+				err = json.Unmarshal(updatedJsonData, &updatedResponse)
+				if err != nil {
+					log.Println("Error:", err)
+					return
+				}
+				timeString := updatedResponse.Time.Format("2006/01/02 15:04:05")
 				msg, op, err := wsutil.ReadClientData(conn)
 				msgTxt := string(msg)
 				errs := json.Unmarshal([]byte(msgTxt), &response)
 				if errs != nil {
 					log.Print("Error json:", errs)
+					return
 				}
-				message := `<div id="idMessage" hx-swap-oob="true">Message: ` + response.Message + `</div>`
+				message := `<div id="idMessage" hx-swap-oob="true"> ` + timeString + " " + response.Message + `</div>`
 				log.Print("Received Message:", message)
 				if err != nil {
 					log.Fatal("read client data", err)
