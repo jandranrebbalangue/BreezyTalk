@@ -23,14 +23,12 @@ type Response struct {
 }
 
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
-
 	conn, _, _, err := ws.UpgradeHTTP(r, w)
 	if err != nil {
 		log.Println("err ws", err)
 	}
 	go func() {
 		defer conn.Close()
-
 		for {
 			response := Response{}
 			response.Time = time.Now()
@@ -43,6 +41,10 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			}
 			timeString := updatedResponse.Time.Format("2006/01/02 15:04:05")
 			msg, op, err := wsutil.ReadClientData(conn)
+			if err != nil {
+				log.Fatal("read client data", err)
+				return
+			}
 			msgTxt := string(msg)
 			errs := json.Unmarshal([]byte(msgTxt), &response)
 			if errs != nil {
@@ -50,18 +52,15 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			message := `<div id="idMessage" hx-swap-oob="true"> ` + timeString + " " + response.Message + `</div>`
-			log.Print("Received Message:", message)
-			if err != nil {
-				log.Fatal("read client data", err)
-				return
-			}
 			err = wsutil.WriteServerMessage(conn, op, []byte(message))
 			if err != nil {
 				log.Fatal("write server message", err)
 				return
 			}
+			log.Print("Received Message:", message)
 		}
 	}()
+
 }
 
 func main() {
