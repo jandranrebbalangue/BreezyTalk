@@ -20,8 +20,6 @@ func main() {
 			HXCurrentUrl  string `json:"HX-Current-URL"`
 		} `json:"HEADERS"`
 	}
-	// handler := http.HandlerFunc(PlayerServer)
-	// log.Fatal(http.ListenAndServe(":5000", handler))
 	log.Fatal(http.ListenAndServe(":8081", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		conn, _, _, err := ws.UpgradeHTTP(r, w)
 		log.Print("Client connection network ", conn.LocalAddr().Network())
