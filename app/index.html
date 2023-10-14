@@ -10,9 +10,10 @@
 <body>
   <div hx-ext="ws" ws-connect="ws:localhost:8081">
     <form id="form" ws-send>
-      <input name="message" />
+      <input name="message" type="text" />
+      <input type="submit" value="Send" />
     </form>
-    <div id="notifications" hx-swap-oob="beforeend:#notifications"></div>
+    <div id="idMessage" hx-swap-oob="beforeend">New message received</div>
   </div>
 </body>
 
