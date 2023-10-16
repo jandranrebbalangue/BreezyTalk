@@ -2,18 +2,24 @@
 <html lang="en">
 
 <head>
-  <title></title>
+  <title>Simple Chat App</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="css/output.css" rel="stylesheet" />
 </head>
 
 <body>
-  <div hx-ext="ws" ws-connect="ws:localhost:8081/chat">
-    <form id="form" ws-send>
-      <input name="message" type="text" />
-      <input type="submit" value="Send" />
-    </form>
-    <div id="idMessage" hx-swap-oob="beforeend"></div>
+  <div class="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen">
+    <div hx-ext="ws" ws-connect="ws:localhost:8081/chat">
+      <form id="form" ws-send>
+        <input type="text" placeholder="Write your message!" class="form-input mt-1 block w-full" name="message" />
+        <button type="submit"
+          class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none">
+          <span class="font-bold">Send</span>
+        </button>
+      </form>
+      <div id="idMessage" hx-swap-oob="beforeend"></div>
+    </div>
   </div>
 </body>
 
