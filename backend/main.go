@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"net"
 	"net/http"
 	"time"
 
@@ -22,12 +23,15 @@ type Response struct {
 	Time time.Time `json:"time"`
 }
 
+var clients = make(map[net.Conn]bool)
+
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	conn, _, _, err := ws.UpgradeHTTP(r, w)
 	if err != nil {
 		log.Println("err ws", err)
 	}
 	go func() {
+		clients[conn] = true
 		defer conn.Close()
 		for {
 			response := Response{}
@@ -43,6 +47,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			msg, op, err := wsutil.ReadClientData(conn)
 			if err != nil {
 				log.Fatal("read client data", err)
+				delete(clients, conn)
 				return
 			}
 			msgTxt := string(msg)
@@ -51,13 +56,15 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				log.Print("Error json:", errs)
 				return
 			}
-			message := `<div id="idMessage" hx-swap-oob="true"> ` + timeString + " " + response.Message + `</div>`
-			err = wsutil.WriteServerMessage(conn, op, []byte(message))
+			for client := range clients {
+				message := `<div id="idMessage" hx-swap-oob="beforeend:#idMessage"> <p>` + timeString + " " + response.Message + `</p></div>`
+				err = wsutil.WriteServerMessage(client, op, []byte(message))
+			}
+
 			if err != nil {
 				log.Fatal("write server message", err)
 				return
 			}
-			log.Print("Received Message:", message)
 		}
 	}()
 
