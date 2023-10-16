@@ -43,7 +43,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				log.Println("Error:", err)
 				return
 			}
-			timeString := updatedResponse.Time.Format("2006/01/02 15:04:05")
+			timeString := updatedResponse.Time.Format("2006/01/02 3:04PM")
 			msg, op, err := wsutil.ReadClientData(conn)
 			if err != nil {
 				log.Fatal("read client data", err)
