@@ -9,9 +9,8 @@
 </head>
 
 <body>
-  <div id="response-div"></div>
   <form hx-post="http://localhost:8081/login" hx-boost="true">
-    <div hx-target="this" hx-swap="outerHTML">
+    <div hx-target="this">
       <div class="form-group">
         <label>Username</label>
         <input type="text" class="form-input mt-1 block w-1/5" name="username" />
@@ -23,6 +22,7 @@
     </div>
     <button class="rounded">Submit</button>
   </form>
+  <div id="response-div"></div>
 </body>
 <script src="htmx.min.js"></script>
 

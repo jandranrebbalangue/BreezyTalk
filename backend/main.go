@@ -76,8 +76,11 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Access-Control-Allow-Headers", "*")
 	user := r.FormValue("username")
 	pass := r.FormValue("password")
-	log.Print("username:", user)
-	log.Print("password:", pass)
+	response := `<div id="response-div" hx-swap-oob="beforeend:#response-div"> <span>` + "username:" + user + " " + "password:" + pass + `</span></div>`
+	_, err := w.Write([]byte(response))
+	if err != nil {
+		log.Print("err write login", err)
+	}
 }
 
 func main() {
