@@ -74,9 +74,12 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Access-Control-Expose-Headers", "*")
 	w.Header().Add("Access-Control-Allow-Methods", "POST,GET")
 	w.Header().Add("Access-Control-Allow-Headers", "*")
+	if r.Header.Get("HX-Request") == "true" {
+		w.Header().Add("HX-Location", "http://localhost:8080/chat.html")
+	}
 	user := r.FormValue("username")
 	pass := r.FormValue("password")
-	response := `<div id="response-div" hx-swap-oob="beforeend:#response-div"> <span>` + "username:" + user + " " + "password:" + pass + `</span></div>`
+	response := `<div id="response-div" hx-swap-oob="beforeend:#response-div" hx-push-url="index.html" hx-get="/"> <span>` + "username:" + user + " " + "password:" + pass + `</span></div>`
 	_, err := w.Write([]byte(response))
 	if err != nil {
 		log.Print("err write login", err)
@@ -84,6 +87,11 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	go func() {
+		fs := http.FileServer(http.Dir("../app"))
+		http.Handle("/", fs)
+		log.Fatal(http.ListenAndServe(":8080", nil))
+	}()
 	http.HandleFunc("/chat", handleWebSocket)
 	http.HandleFunc("/login", handleLogin)
 	log.Fatal(http.ListenAndServe(":8081", nil))
