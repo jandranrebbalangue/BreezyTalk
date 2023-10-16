@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="css/output.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="response-div"></div>
+  <form hx-post="http://localhost:8081/login" hx-boost="true">
+    <div hx-target="this" hx-swap="outerHTML">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-input mt-1 block w-1/5" name="username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-input mt-1 block w-1/5" name="password" />
+      </div>
+    </div>
+    <button class="rounded">Submit</button>
+  </form>
+</body>
+<script src="htmx.min.js"></script>
+
+</html>

@@ -69,9 +69,20 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}()
 
 }
+func handleLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Expose-Headers", "*")
+	w.Header().Add("Access-Control-Allow-Methods", "POST,GET")
+	w.Header().Add("Access-Control-Allow-Headers", "*")
+	user := r.FormValue("username")
+	pass := r.FormValue("password")
+	log.Print("username:", user)
+	log.Print("password:", pass)
+}
 
 func main() {
 	http.HandleFunc("/chat", handleWebSocket)
+	http.HandleFunc("/login", handleLogin)
 	log.Fatal(http.ListenAndServe(":8081", nil))
 
 }
