@@ -1,4 +1,4 @@
-# Simple Chat Application
+# Simple Websocket implementation
 Tech Stack:
 - GO
 - HTMX
